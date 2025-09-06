@@ -45,12 +45,10 @@ const NotificationsPage: React.FC = () => {
 
   const openFile = (notification: Notification) => {
     if (notification.fileUrl) {
-      const fileUrl = `http://localhost:5000${notification.fileUrl}`;
-      if (notification.fileType === 'pdf') {
-        window.open(fileUrl, '_blank');
-      } else if (notification.fileType === 'html') {
-        window.open(fileUrl, '_blank');
-      }
+      // Extract filename from the fileUrl (e.g., '/uploads/filename.pdf' -> 'filename.pdf')
+      const filename = notification.fileUrl.split('/').pop();
+      const viewUrl = `http://localhost:5000/view/${filename}`;
+      window.open(viewUrl, '_blank');
     }
   };
 

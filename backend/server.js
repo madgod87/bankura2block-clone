@@ -92,22 +92,89 @@ const upload = multer({
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// Custom middleware for serving files with proper headers
-app.use('/uploads', (req, res, next) => {
-  const filePath = path.join(__dirname, 'uploads', req.path);
-  const ext = path.extname(req.path).toLowerCase();
+// Custom route for serving files with proper headers
+app.get('/uploads/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, 'uploads', filename);
+  const ext = path.extname(filename).toLowerCase();
   
-  // Set appropriate Content-Type headers
-  if (ext === '.pdf') {
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'inline'); // Open in browser instead of download
-  } else if (ext === '.html' || ext === '.htm') {
-    res.setHeader('Content-Type', 'text/html');
-    res.setHeader('Content-Disposition', 'inline');
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'File not found' });
   }
   
-  // Serve the file
-  express.static(path.join(__dirname, 'uploads'))(req, res, next);
+  // Set appropriate Content-Type and disposition headers
+  if (ext === '.pdf') {
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'inline; filename="' + filename + '"');
+    res.setHeader('Cache-Control', 'no-cache');
+  } else if (ext === '.html' || ext === '.htm') {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Content-Disposition', 'inline; filename="' + filename + '"');
+    res.setHeader('Cache-Control', 'no-cache');
+  } else {
+    // For other file types, let them download
+    res.setHeader('Content-Disposition', 'attachment; filename="' + filename + '"');
+  }
+  
+  // Send the file
+  res.sendFile(filePath);
+});
+
+// Dedicated view endpoint for HTML/PDF files (better for browser viewing)
+app.get('/view/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, 'uploads', filename);
+  const ext = path.extname(filename).toLowerCase();
+  
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send('<h1>File not found</h1>');
+  }
+  
+  // For HTML files, serve directly
+  if (ext === '.html' || ext === '.htm') {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    return res.sendFile(filePath);
+  }
+  
+  // For PDF files, create an HTML wrapper to display the PDF
+  if (ext === '.pdf') {
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PDF Viewer - ${filename}</title>
+        <style>
+            body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f5f5f5; }
+            .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .header { background: #3b82f6; color: white; padding: 15px 20px; }
+            .pdf-viewer { width: 100%; height: 80vh; border: none; }
+            .download-btn { display: inline-block; margin: 10px 20px; padding: 10px 20px; background: #10b981; color: white; text-decoration: none; border-radius: 5px; }
+            .download-btn:hover { background: #059669; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>📄 ${filename}</h1>
+                <a href="/uploads/${filename}" class="download-btn" download>📥 Download PDF</a>
+            </div>
+            <iframe src="/uploads/${filename}" class="pdf-viewer" type="application/pdf">
+                <p>Your browser does not support PDFs. <a href="/uploads/${filename}">Download the PDF</a>.</p>
+            </iframe>
+        </div>
+    </body>
+    </html>
+    `;
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    return res.send(htmlContent);
+  }
+  
+  // For other files, redirect to download
+  res.redirect('/uploads/' + filename);
 });
 
 // JWT middleware

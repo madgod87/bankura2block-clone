@@ -4,5 +4,11 @@
     "username": "admin",
     "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
     "role": "admin"
+  },
+  {
+    "id": 2,
+    "username": "madgod87",
+    "password": "$2b$10$yXRVF2L5cjBSx3vGPfNGAe2c6XLdzg/3vi2fqEcPJnH84PntThxyC",
+    "role": "admin"
   }
 ]
