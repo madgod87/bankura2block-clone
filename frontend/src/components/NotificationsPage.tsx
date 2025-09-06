@@ -24,6 +24,7 @@ const NotificationsPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await apiEndpoints.get('/api/notifications');
+      console.log('Fetched notifications:', response.data.data);
       setNotifications(response.data.data);
     } catch (err: any) {
       setError('Failed to fetch notifications');
@@ -45,9 +46,18 @@ const NotificationsPage: React.FC = () => {
 
   const openFile = (notification: Notification) => {
     if (notification.fileUrl) {
-      // Extract filename from the fileUrl (e.g., '/uploads/filename.pdf' -> 'filename.pdf')
+      // Extract filename from the fileUrl (e.g., '/uploads/09f6b2dce405c4e9c564cf5faf5f77a2' -> '09f6b2dce405c4e9c564cf5faf5f77a2')
       const filename = notification.fileUrl.split('/').pop();
-      const viewUrl = `http://localhost:5000/view/${filename}`;
+      const viewUrl = `http://localhost:5000/view/${encodeURIComponent(filename!)}`;
+      
+      // Debug logging
+      console.log('Opening file:', {
+        title: notification.title,
+        fileUrl: notification.fileUrl,
+        filename: filename,
+        viewUrl: viewUrl
+      });
+      
       window.open(viewUrl, '_blank');
     }
   };

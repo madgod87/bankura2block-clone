@@ -83,16 +83,41 @@ let notificationId = 1;
 loadData();
 
 // File upload setup
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, 'uploads/');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    // Keep original filename with timestamp to avoid conflicts
+    const timestamp = Date.now();
+    const ext = path.extname(file.originalname);
+    const name = path.basename(file.originalname, ext);
+    cb(null, `${timestamp}-${name}${ext}`);
+  }
+});
+
 const upload = multer({
-  dest: path.join(__dirname, 'uploads/'),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  storage: storage,
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
+  fileFilter: function (req, file, cb) {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (ext === '.pdf' || ext === '.html' || ext === '.htm') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PDF and HTML files are allowed'));
+    }
+  }
 });
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// Custom route for serving files with proper headers
+// Custom route for serving files with proper headers for inline viewing
 app.get('/uploads/:filename', (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(__dirname, 'uploads', filename);
@@ -103,15 +128,22 @@ app.get('/uploads/:filename', (req, res) => {
     return res.status(404).json({ error: 'File not found' });
   }
   
-  // Set appropriate Content-Type and disposition headers
-  if (ext === '.pdf') {
+  // Find the notification to get the file type (for files without extensions)
+  const notification = notifications.find(n => n.fileUrl === `/uploads/${filename}`);
+  const fileType = notification ? notification.fileType : null;
+  
+  // Determine content type based on extension or fileType
+  const isPdf = ext === '.pdf' || fileType === 'pdf';
+  const isHtml = ext === '.html' || ext === '.htm' || fileType === 'html';
+  
+  // Set appropriate Content-Type and headers for inline viewing
+  if (isPdf) {
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'inline; filename="' + filename + '"');
-    res.setHeader('Cache-Control', 'no-cache');
-  } else if (ext === '.html' || ext === '.htm') {
+    res.setHeader('Content-Disposition', 'inline');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+  } else if (isHtml) {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.setHeader('Content-Disposition', 'inline; filename="' + filename + '"');
-    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Content-Disposition', 'inline');
   } else {
     // For other file types, let them download
     res.setHeader('Content-Disposition', 'attachment; filename="' + filename + '"');
@@ -132,14 +164,22 @@ app.get('/view/:filename', (req, res) => {
     return res.status(404).send('<h1>File not found</h1>');
   }
   
+  // Find the notification to get the file type (for files without extensions)
+  const notification = notifications.find(n => n.fileUrl === `/uploads/${filename}`);
+  const fileType = notification ? notification.fileType : null;
+  
+  // Determine if this is HTML or PDF based on extension or fileType
+  const isHtml = ext === '.html' || ext === '.htm' || fileType === 'html';
+  const isPdf = ext === '.pdf' || fileType === 'pdf';
+  
   // For HTML files, serve directly
-  if (ext === '.html' || ext === '.htm') {
+  if (isHtml) {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     return res.sendFile(filePath);
   }
   
   // For PDF files, create an HTML wrapper to display the PDF
-  if (ext === '.pdf') {
+  if (isPdf) {
     const htmlContent = `
     <!DOCTYPE html>
     <html lang="en">
@@ -258,31 +298,52 @@ app.post('/api/admin/change-password', authenticateToken, async (req, res) => {
 
 // Notifications CRUD
 // Create notification (admin or subadmin)
-app.post('/api/notifications', authenticateToken, upload.single('file'), (req, res) => {
-  const { title, description } = req.body;
-  let fileUrl = '', fileType = 'none';
-  if (req.file) {
-    fileUrl = `/uploads/${req.file.filename}`;
-    const ext = path.extname(req.file.originalname).toLowerCase();
-    if (ext === '.pdf') fileType = 'pdf';
-    else if (ext === '.html' || ext === '.htm') fileType = 'html';
-    else {
-      // Delete the uploaded file if not allowed
-      fs.unlinkSync(req.file.path);
-      return res.status(400).json({ error: 'Only PDF or HTML files allowed' });
+app.post('/api/notifications', authenticateToken, (req, res) => {
+  upload.single('file')(req, res, function (err) {
+    if (err) {
+      console.error('Upload error:', err);
+      return res.status(400).json({ error: err.message || 'File upload failed' });
     }
-  }
-  const notification = {
-    id: notificationId++,
-    title,
-    description,
-    fileUrl,
-    fileType,
-    createdAt: new Date()
-  };
-  notifications.unshift(notification);
-  saveNotifications(); // Save to JSON file
-  res.json({ success: true, data: notification });
+    
+    try {
+      const { title, description } = req.body;
+      if (!title || !description) {
+        return res.status(400).json({ error: 'Title and description are required' });
+      }
+      
+      let fileUrl = '', fileType = 'none';
+      if (req.file) {
+        fileUrl = `/uploads/${req.file.filename}`;
+        const ext = path.extname(req.file.originalname).toLowerCase();
+        if (ext === '.pdf') fileType = 'pdf';
+        else if (ext === '.html' || ext === '.htm') fileType = 'html';
+        else {
+          // Delete the uploaded file if not allowed
+          if (fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+          }
+          return res.status(400).json({ error: 'Only PDF or HTML files allowed' });
+        }
+      }
+      
+      const notification = {
+        id: notificationId++,
+        title,
+        description,
+        fileUrl,
+        fileType,
+        createdAt: new Date()
+      };
+      
+      notifications.unshift(notification);
+      saveNotifications(); // Save to JSON file
+      
+      res.json({ success: true, data: notification });
+    } catch (error) {
+      console.error('Notification creation error:', error);
+      res.status(500).json({ error: 'Failed to create notification' });
+    }
+  });
 });
 
 // Get all notifications (public)
@@ -305,6 +366,19 @@ app.delete('/api/notifications/:id', authenticateToken, (req, res) => {
   res.json({ success: true, message: 'Notification deleted' });
 });
 
+
+// Debug route to show notifications data
+app.get('/debug/notifications', (req, res) => {
+  res.json({ 
+    notifications: notifications.map(n => ({
+      id: n.id,
+      title: n.title, 
+      fileUrl: n.fileUrl,
+      fileType: n.fileType
+    })),
+    uploadsDir: require('fs').readdirSync(require('path').join(__dirname, 'uploads'))
+  });
+});
 
 // Root route for health check
 app.get('/', (req, res) => {

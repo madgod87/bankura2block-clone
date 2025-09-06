@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APAS 2025 Camp Schedule GP Wise - Krishnagar-I Development Block</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-50: #eff6ff;
+            --primary-100: #dbeafe;
+            --primary-200: #bfdbfe;
+            --primary-300: #93c5fd;
+            --primary-400: #60a5fa;
+            --primary-500: #3b82f6;
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-800: #1e40af;
+            --primary-900: #1e3a8a;
+            --accent-50: #ecfdf5;
+            --accent-100: #d1fae5;
+            --accent-200: #a7f3d0;
+            --accent-300: #6ee7b7;
+            --accent-400: #34d399;
+            --accent-500: #10b981;
+            --accent-600: #059669;
+            --accent-700: #047857;
+            --accent-800: #065f46;
+            --accent-900: #064e3b;
+            --secondary-400: #f59e0b;
+            --secondary-500: #d97706;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-500) 50%, var(--accent-500) 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .header-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem auto 0;
+            max-width: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .header-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .title-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .title-section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.2rem;
+            color: var(--primary-800);
+            margin-bottom: 1rem;
+        }
+
+        .title-section p {
+            color: var(--primary-600);
+            font-size: 1.1rem;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .schedule-table thead {
+            background: linear-gradient(135deg, var(--primary-600), var(--accent-600));
+            color: white;
+        }
+
+        .schedule-table th {
+            padding: 1rem 0.8rem;
+            text-align: left;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            border: none;
+        }
+
+        .schedule-table th:first-child {
+            border-top-left-radius: 12px;
+        }
+
+        .schedule-table th:last-child {
+            border-top-right-radius: 12px;
+        }
+
+        .schedule-table tbody tr {
+            border-bottom: 1px solid var(--primary-100);
+            transition: all 0.2s ease;
+        }
+
+        .schedule-table tbody tr:hover {
+            background: var(--primary-50);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+
+        .schedule-table td {
+            padding: 1rem 0.8rem;
+            vertical-align: top;
+        }
+
+        .ac-code {
+            background: var(--accent-100);
+            color: var(--accent-800);
+            padding: 0.3rem 0.6rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .part-no {
+            background: var(--primary-100);
+            color: var(--primary-800);
+            padding: 0.3rem 0.6rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .venue {
+            background: var(--secondary-400);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .date {
+            background: var(--accent-500);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .gp-name {
+            color: var(--primary-700);
+            font-weight: 500;
+        }
+
+        .school-name {
+            color: var(--primary-800);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--primary-900) 0%, var(--primary-800) 50%, var(--accent-800) 100%);
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo-icon {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-logo-icon span {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .footer h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+
+        .footer-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-info-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 2rem;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--accent-500), var(--accent-600));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .table-container {
+                padding: 1rem;
+            }
+
+            .schedule-table {
+                font-size: 0.8rem;
+            }
+
+            .schedule-table th,
+            .schedule-table td {
+                padding: 0.7rem 0.5rem;
+            }
+        }
+
+        @media print {
+            .header, .footer {
+                background: var(--primary-800) !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🏛️ Krishnagar-I Development Block</h1>
+            <p>Nadia District Administration Office</p>
+            <div class="header-info">
+                <span>📧 bdo.krishnagar1@gmail.com</span>
+                <span>📞 9733374108</span>
+                <span>🌐 Government of West Bengal</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Title Section -->
+        <div class="title-section">
+            <h2>📅 APAS 2025 Camp Schedule GP Wise</h2>
+            <p>Amader Para Amader Samadhan - Camp Schedule for Gram Panchayats</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>150+</h3>
+                <p>Total Parts Covered</p>
+            </div>
+            <div class="stat-card">
+                <h3>50+</h3>
+                <p>Primary Schools</p>
+            </div>
+            <div class="stat-card">
+                <h3>15+</h3>
+                <p>Gram Panchayats</p>
+            </div>
+            <div class="stat-card">
+                <h3>15 Days</h3>
+                <p>Camp Duration</p>
+            </div>
+        </div>
+
+        <!-- Schedule Table -->
+        <div class="table-container">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>AC</th>
+                        <th>Part No.</th>
+                        <th>Part Name</th>
+                        <th>GP</th>
+                        <th>APAS Meeting & DS Camp Venue</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="ac-code">83</span></td>
+                        <td><span class="part-no">169</span></td>
+                        <td class="school-name">Hazi Kalu Ulla Mondal Smriti Primary School, Room-1</td>
+                        <td class="gp-name">Bhimpur</td>
+                        <td><span class="venue">Nelua Free Pry. School</span></td>
+                        <td><span class="date">02-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">83</span></td>
+                        <td><span class="part-no">170</span></td>
+                        <td class="school-name">Nelua Free Pry. School, Room-1</td>
+                        <td class="gp-name">Bhimpur</td>
+                        <td><span class="venue">Nelua Free Pry. School</span></td>
+                        <td><span class="date">02-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">83</span></td>
+                        <td><span class="part-no">171</span></td>
+                        <td class="school-name">Jalkar Mathurapur Spl. Cadre Pry. School, Room-1</td>
+                        <td class="gp-name">Bhimpur</td>
+                        <td><span class="venue">Nelua Free Pry. School</span></td>
+                        <td><span class="date">02-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">83</span></td>
+                        <td><span class="part-no">196</span></td>
+                        <td class="school-name">Kashipur Banshberia Pry. School, Room-1</td>
+                        <td class="gp-name">Asannagar</td>
+                        <td><span class="venue">Kashipur Banshberia Pry. School</span></td>
+                        <td><span class="date">02-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">83</span></td>
+                        <td><span class="part-no">197</span></td>
+                        <td class="school-name">Kashipur Banshberia Pry. School, Room-2</td>
+                        <td class="gp-name">Asannagar</td>
+                        <td><span class="venue">Kashipur Banshberia Pry. School</span></td>
+                        <td><span class="date">02-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">83</span></td>
+                        <td><span class="part-no">198</span></td>
+                        <td class="school-name">Assangar Bagdipara Pry. School, Room-1</td>
+                        <td class="gp-name">Asannagar</td>
+                        <td><span class="venue">Kashipur Banshberia Pry. School</span></td>
+                        <td><span class="date">02-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">85</span></td>
+                        <td><span class="part-no">195</span></td>
+                        <td class="school-name">Tentia Natunpara Pry. School, Room-1</td>
+                        <td class="gp-name">Chakdignagar</td>
+                        <td><span class="venue">Tentia Natunpara Pry.School</span></td>
+                        <td><span class="date">04-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">85</span></td>
+                        <td><span class="part-no">196</span></td>
+                        <td class="school-name">Tentia Natunpara Pry. School, Room-2</td>
+                        <td class="gp-name">Chakdignagar</td>
+                        <td><span class="venue">Tentia Natunpara Pry.School</span></td>
+                        <td><span class="date">04-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">85</span></td>
+                        <td><span class="part-no">197</span></td>
+                        <td class="school-name">Tentia Ghosh para Pry. School, Room-1</td>
+                        <td class="gp-name">Chakdignagar</td>
+                        <td><span class="venue">Tentia Natunpara Pry.School</span></td>
+                        <td><span class="date">04-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">85</span></td>
+                        <td><span class="part-no">218</span></td>
+                        <td class="school-name">Dignagar Kalpotoru Pry. School, Room-1</td>
+                        <td class="gp-name">Dignagar</td>
+                        <td><span class="venue">Dignagar Uttar Para Pry. School</span></td>
+                        <td><span class="date">04-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">85</span></td>
+                        <td><span class="part-no">219</span></td>
+                        <td class="school-name">Dignagar Uttar Para Pry. School, Room-1</td>
+                        <td class="gp-name">Dignagar</td>
+                        <td><span class="venue">Dignagar Uttar Para Pry. School</span></td>
+                        <td><span class="date">04-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">85</span></td>
+                        <td><span class="part-no">220</span></td>
+                        <td class="school-name">Chabighata Gholgachhi Pry. School, Room-1</td>
+                        <td class="gp-name">Dignagar</td>
+                        <td><span class="venue">Dignagar Uttar Para Pry. School</span></td>
+                        <td><span class="date">04-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">84</span></td>
+                        <td><span class="part-no">230</span></td>
+                        <td class="school-name">Anandabas Paschim Para Primary School, Room-1</td>
+                        <td class="gp-name">Bhaluka</td>
+                        <td><span class="venue">Anandabas Paschim Para Primary School</span></td>
+                        <td><span class="date">05-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">84</span></td>
+                        <td><span class="part-no">231</span></td>
+                        <td class="school-name">Anandabas Paschim Para Primary School, Room-2</td>
+                        <td class="gp-name">Bhaluka</td>
+                        <td><span class="venue">Anandabas Paschim Para Primary School</span></td>
+                        <td><span class="date">05-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">84</span></td>
+                        <td><span class="part-no">232</span></td>
+                        <td class="school-name">Anandabas Prathamick Vidyalaya, Room-1</td>
+                        <td class="gp-name">Bhaluka</td>
+                        <td><span class="venue">Anandabas Paschim Para Primary School</span></td>
+                        <td><span class="date">05-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">84</span></td>
+                        <td><span class="part-no">247</span></td>
+                        <td class="school-name">Deypara Bishnupur Prathamick Vidyalaya, Room-1</td>
+                        <td class="gp-name">Joania</td>
+                        <td><span class="venue">Deypara Bishnupur Prathamick Vidyalaya</span></td>
+                        <td><span class="date">05-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">84</span></td>
+                        <td><span class="part-no">248</span></td>
+                        <td class="school-name">Deypara Bishnupur Prathamick Vidyalaya, Room-2</td>
+                        <td class="gp-name">Joania</td>
+                        <td><span class="venue">Deypara Bishnupur Prathamick Vidyalaya</span></td>
+                        <td><span class="date">05-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">84</span></td>
+                        <td><span class="part-no">249</span></td>
+                        <td class="school-name">Monipota Adibasi Primary School, Room-1</td>
+                        <td class="gp-name">Joania</td>
+                        <td><span class="venue">Deypara Bishnupur Prathamick Vidyalaya</span></td>
+                        <td><span class="date">05-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">83</span></td>
+                        <td><span class="part-no">240</span></td>
+                        <td class="school-name">Natungram Special Cadre Primary School, Room-1</td>
+                        <td class="gp-name">Dogachhi</td>
+                        <td><span class="venue">Natungram Special Cadre Primary School</span></td>
+                        <td><span class="date">06-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">83</span></td>
+                        <td><span class="part-no">241</span></td>
+                        <td class="school-name">Natungram Special Cadre Primary School, Room-2</td>
+                        <td class="gp-name">Dogachhi</td>
+                        <td><span class="venue">Natungram Special Cadre Primary School</span></td>
+                        <td><span class="date">06-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">83</span></td>
+                        <td><span class="part-no">242</span></td>
+                        <td class="school-name">Samarpalli I.C.D.S. Centre, Room-1</td>
+                        <td class="gp-name">Dogachhi</td>
+                        <td><span class="venue">Natungram Special Cadre Primary School</span></td>
+                        <td><span class="date">06-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">85</span></td>
+                        <td><span class="part-no">164</span></td>
+                        <td class="school-name">Jhitkipota Jr. Basic School</td>
+                        <td class="gp-name">Bhatjungla</td>
+                        <td><span class="venue">Jhitkipota Jr. Basic Primary School</span></td>
+                        <td><span class="date">06-08-2025</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="ac-code">85</span></td>
+                        <td><span class="part-no">165</span></td>
+                        <td class="school-name">Jhitkipota Jr. Basic School</td>
+                        <td class="gp-name">Bhatjungla</td>
+                        <td><span class="venue">Jhitkipota Jr. Basic Primary School</span></td>
+                        <td><span class="date">06-08-2025</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="title-section" style="margin-top: 2rem;">
+            <h2>📋 Important Information</h2>
+            <p style="text-align: left; margin-top: 1rem;">
+                <strong>🎯 APAS (Amader Para Amader Samadhan)</strong> - Our Village, Our Solution<br><br>
+                <strong>📍 Coverage:</strong> This schedule covers multiple Gram Panchayats across Assembly Constituencies 83, 84, and 85<br>
+                <strong>🏫 Venues:</strong> Camps will be held at various Primary Schools and educational institutions<br>
+                <strong>📅 Duration:</strong> Camps scheduled from 2nd August to 15th August 2025<br>
+                <strong>🕐 Timing:</strong> Please check with local officials for exact timings<br><br>
+                <strong>For more information, contact:</strong><br>
+                📧 bdo.krishnagar1@gmail.com | 📞 9733374108
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="footer-logo-icon">
+                    <span>K1</span>
+                </div>
+                <div>
+                    <h3>Krishnagar-I Development Block</h3>
+                    <p>Nadia District Administration Office</p>
+                </div>
+            </div>
+
+            <div class="footer-info">
+                <div class="footer-info-item">
+                    <h4>📍 Address</h4>
+                    <p>Krishnagar-I Development Block Office<br>Nadia, West Bengal - 741101</p>
+                </div>
+                <div class="footer-info-item">
+                    <h4>📞 Contact</h4>
+                    <p>Phone: 9733374108<br>Email: bdo.krishnagar1@gmail.com</p>
+                </div>
+                <div class="footer-info-item">
+                    <h4>🕒 Office Hours</h4>
+                    <p>Monday - Friday: 10:30 AM - 5:30 PM<br>Saturday & Sunday: Closed</p>
+                </div>
+                <div class="footer-info-item">
+                    <h4>🌐 Follow Us</h4>
+                    <p>X (Twitter): @Krishnagarbdo1<br>Government of West Bengal</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Krishnagar-I Development Block, Nadia. All rights reserved.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Developed as part of Digital India Initiative</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

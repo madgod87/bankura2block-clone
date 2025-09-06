@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import AdminRegister from './components/AdminRegister';
 import NotificationsPage from './components/NotificationsPage';
 import AdminDashboard from './components/AdminDashboard';
+import ImageGallery from './components/ImageGallery';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="/admin-register" element={<AdminRegister />} />
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/gallery" element={<ImageGallery />} />
           </Routes>
         </main>
         <Footer />
