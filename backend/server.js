@@ -74,13 +74,13 @@ function saveNotifications() {
   }
 }
 
+// Declare variables first
+let users = [];
+let notifications = [];
+let notificationId = 1;
+
 // Load existing data on startup
 loadData();
-
-// In-memory storage (now backed by JSON files)
-let users = users || [];
-let notifications = notifications || [];
-let notificationId = notificationId || 1;
 
 // File upload setup
 const upload = multer({
