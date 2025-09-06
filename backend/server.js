@@ -1,19 +1,20 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
-
-const User = require('./models/User');
-const Notification = require('./models/Notification');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// In-memory storage
+let users = [];
+let notifications = [];
+let notificationId = 1;
 
 // File upload setup
 const upload = multer({
@@ -44,26 +45,25 @@ function requireAdmin(req, res, next) {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
   next();
 }
-// Admin registration (for initial setup, then disable or protect this route!)
+
+// Admin registration (for initial setup)
 app.post('/api/admin/register', async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
-  const existing = await User.findOne({ username });
-  if (existing) return res.status(400).json({ error: 'User already exists' });
+  if (users.find(u => u.username === username)) return res.status(400).json({ error: 'User already exists' });
   const hash = await bcrypt.hash(password, 10);
-  const user = new User({ username, password: hash, role: 'admin' });
-  await user.save();
+  users.push({ id: users.length + 1, username, password: hash, role: 'admin' });
   res.json({ success: true, message: 'Admin registered' });
 });
 
 // Login
 app.post('/api/admin/login', async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ username });
+  const user = users.find(u => u.username === username);
   if (!user) return res.status(400).json({ error: 'Invalid credentials' });
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) return res.status(400).json({ error: 'Invalid credentials' });
-  const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '1d' });
+  const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, process.env.JWT_SECRET || 'secret', { expiresIn: '1d' });
   res.json({ success: true, token, user: { username: user.username, role: user.role } });
 });
 
@@ -71,32 +71,41 @@ app.post('/api/admin/login', async (req, res) => {
 app.post('/api/admin/create-subadmin', authenticateToken, requireAdmin, async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
-  const existing = await User.findOne({ username });
-  if (existing) return res.status(400).json({ error: 'User already exists' });
+  if (users.find(u => u.username === username)) return res.status(400).json({ error: 'User already exists' });
   const hash = await bcrypt.hash(password, 10);
-  const user = new User({ username, password: hash, role: 'subadmin' });
-  await user.save();
+  users.push({ id: users.length + 1, username, password: hash, role: 'subadmin' });
   res.json({ success: true, message: 'Sub-admin created' });
 });
 
 // Delete sub-admin (admin only)
-app.delete('/api/admin/delete-subadmin/:username', authenticateToken, requireAdmin, async (req, res) => {
+app.delete('/api/admin/delete-subadmin/:username', authenticateToken, requireAdmin, (req, res) => {
   const { username } = req.params;
-  const user = await User.findOne({ username, role: 'subadmin' });
-  if (!user) return res.status(404).json({ error: 'Sub-admin not found' });
-  await user.deleteOne();
+  const idx = users.findIndex(u => u.username === username && u.role === 'subadmin');
+  if (idx === -1) return res.status(404).json({ error: 'Sub-admin not found' });
+  users.splice(idx, 1);
   res.json({ success: true, message: 'Sub-admin deleted' });
 });
 
 // List sub-admins (admin only)
-app.get('/api/admin/subadmins', authenticateToken, requireAdmin, async (req, res) => {
-  const subadmins = await User.find({ role: 'subadmin' }).select('-password');
+app.get('/api/admin/subadmins', authenticateToken, requireAdmin, (req, res) => {
+  const subadmins = users.filter(u => u.role === 'subadmin').map(u => ({ username: u.username, role: u.role }));
   res.json({ success: true, data: subadmins });
+});
+
+// Change password (admin or subadmin)
+app.post('/api/admin/change-password', authenticateToken, async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const user = users.find(u => u.username === req.user.username);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  const valid = await bcrypt.compare(oldPassword, user.password);
+  if (!valid) return res.status(400).json({ error: 'Old password incorrect' });
+  user.password = await bcrypt.hash(newPassword, 10);
+  res.json({ success: true, message: 'Password changed' });
 });
 
 // Notifications CRUD
 // Create notification (admin or subadmin)
-app.post('/api/notifications', authenticateToken, upload.single('file'), async (req, res) => {
+app.post('/api/notifications', authenticateToken, upload.single('file'), (req, res) => {
   const { title, description } = req.body;
   let fileUrl = '', fileType = 'none';
   if (req.file) {
@@ -104,142 +113,49 @@ app.post('/api/notifications', authenticateToken, upload.single('file'), async (
     const ext = path.extname(req.file.originalname).toLowerCase();
     if (ext === '.pdf') fileType = 'pdf';
     else if (ext === '.html' || ext === '.htm') fileType = 'html';
-    else return res.status(400).json({ error: 'Only PDF or HTML files allowed' });
+    else {
+      // Delete the uploaded file if not allowed
+      fs.unlinkSync(req.file.path);
+      return res.status(400).json({ error: 'Only PDF or HTML files allowed' });
+    }
   }
-  const notification = new Notification({ title, description, fileUrl, fileType });
-  await notification.save();
+  const notification = {
+    id: notificationId++,
+    title,
+    description,
+    fileUrl,
+    fileType,
+    createdAt: new Date()
+  };
+  notifications.unshift(notification);
   res.json({ success: true, data: notification });
 });
 
 // Get all notifications (public)
-app.get('/api/notifications', async (req, res) => {
-  const notifications = await Notification.find().sort({ createdAt: -1 });
+app.get('/api/notifications', (req, res) => {
   res.json({ success: true, data: notifications });
 });
 
 // Delete notification (admin or subadmin)
-app.delete('/api/notifications/:id', authenticateToken, async (req, res) => {
-  const notification = await Notification.findById(req.params.id);
-  if (!notification) return res.status(404).json({ error: 'Notification not found' });
-  await notification.deleteOne();
+app.delete('/api/notifications/:id', authenticateToken, (req, res) => {
+  const id = parseInt(req.params.id);
+  const idx = notifications.findIndex(n => n.id === id);
+  if (idx === -1) return res.status(404).json({ error: 'Notification not found' });
+  // Optionally delete file
+  if (notifications[idx].fileUrl) {
+    const filePath = path.join(__dirname, notifications[idx].fileUrl);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  }
+  notifications.splice(idx, 1);
   res.json({ success: true, message: 'Notification deleted' });
 });
 
-// Routes
+
+// Root route for health check
 app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Bankura2Block API Server is running!',
-    version: '1.0.0',
-    status: 'active'
-  });
-});
-
-// API Routes
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime()
-  });
-});
-
-// Contact form endpoint
-app.post('/api/contact', (req, res) => {
-  const { name, email, message, phone } = req.body;
-  
-  // Basic validation
-  if (!name || !email || !message) {
-    return res.status(400).json({ 
-      error: 'Missing required fields: name, email, message' 
-    });
-  }
-
-  // Here you would typically save to database or send email
-  console.log('Contact form submission:', { name, email, message, phone });
-  
-  res.json({ 
-    success: true, 
-    message: 'Contact form submitted successfully',
-    data: { name, email }
-  });
-});
-
-// News/Updates endpoint
-app.get('/api/news', (req, res) => {
-  const news = [
-    {
-      id: 1,
-      title: 'Welcome to Bankura2Block',
-      content: 'Discover our services and offerings.',
-      date: '2024-01-15',
-      category: 'announcement'
-    },
-    {
-      id: 2,
-      title: 'New Services Available',
-      content: 'We have expanded our service offerings.',
-      date: '2024-01-10',
-      category: 'update'
-    },
-    {
-      id: 3,
-      title: 'Community Events',
-      content: 'Join us for upcoming community events.',
-      date: '2024-01-05',
-      category: 'event'
-    }
-  ];
-  
-  res.json({ success: true, data: news });
-});
-
-// Services endpoint
-app.get('/api/services', (req, res) => {
-  const services = [
-    {
-      id: 1,
-      name: 'Service One',
-      description: 'Comprehensive solution for your needs',
-      icon: 'service-icon-1',
-      features: ['Feature 1', 'Feature 2', 'Feature 3']
-    },
-    {
-      id: 2,
-      name: 'Service Two',
-      description: 'Advanced tools and support',
-      icon: 'service-icon-2',
-      features: ['Feature A', 'Feature B', 'Feature C']
-    },
-    {
-      id: 3,
-      name: 'Service Three',
-      description: 'Premium experience and quality',
-      icon: 'service-icon-3',
-      features: ['Premium 1', 'Premium 2', 'Premium 3']
-    }
-  ];
-  
-  res.json({ success: true, data: services });
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ 
-    error: 'Something went wrong!',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
-  });
-});
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ 
-    error: 'Route not found',
-    path: req.originalUrl 
-  });
+  res.send('Backend server is running.');
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Server running on port ${PORT}`);
 });
