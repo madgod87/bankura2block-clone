@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "title": "Welcome to Krishnagar-I Development Block Portal",
+    "description": "We are pleased to announce the launch of our new digital platform. Citizens can now access government services, check application statuses, and stay updated with important announcements through this portal. For assistance, contact us at bdo.krishnagar1@gmail.com or call 9733374108.",
+    "fileUrl": "",
+    "fileType": "none",
+    "createdAt": "2025-09-06T15:53:00.000Z"
+  },
+  {
+    "id": 2,
+    "title": "Important Notice - Office Hours Update",
+    "description": "Please note that our office hours have been updated. We are now open from 10:00 AM to 5:00 PM, Monday through Friday. Saturday hours are 10:00 AM to 2:00 PM. Closed on Sundays and government holidays.",
+    "fileUrl": "",
+    "fileType": "none",
+    "createdAt": "2025-09-05T10:00:00.000Z"
+  }
+]

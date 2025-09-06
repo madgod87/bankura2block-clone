@@ -6,6 +6,8 @@ import Services from './components/Services';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
 import AdminRegister from './components/AdminRegister';
+import NotificationsPage from './components/NotificationsPage';
+import AdminDashboard from './components/AdminDashboard';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
@@ -24,6 +26,8 @@ function App() {
               </>
             } />
             <Route path="/admin-register" element={<AdminRegister />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
           </Routes>
         </main>
         <Footer />

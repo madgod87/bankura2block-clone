@@ -4,7 +4,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Project Overview
 
-Bankura2Block is a full-stack React application cloning a government website with responsive design and colorful UI. The project consists of a TypeScript React frontend with Tailwind CSS and a Node.js Express backend.
+Krishnagar-I Development Block is a full-stack React application for a government website with responsive design and colorful UI. The project consists of a TypeScript React frontend with Tailwind CSS and a Node.js Express backend.
 
 ## Development Commands
 
@@ -102,7 +102,7 @@ const { submitContact, loading, error, success } = useContactForm();
 ### Frontend (.env)
 ```
 REACT_APP_API_URL=http://localhost:5000
-REACT_APP_APP_NAME=Bankura II Block
+REACT_APP_APP_NAME=Krishnagar-I Block
 REACT_APP_VERSION=1.0.0
 ```
 
@@ -115,7 +115,7 @@ NODE_ENV=development
 ## File Structure Context
 
 ```
-bankura2block-clone/
+krishnagar-i-block/
 ├── frontend/              # React TypeScript application
 │   ├── src/
 │   │   ├── components/    # Reusable UI components

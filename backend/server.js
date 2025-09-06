@@ -11,10 +11,76 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// In-memory storage
-let users = [];
-let notifications = [];
-let notificationId = 1;
+// Data file paths
+const DATA_DIR = path.join(__dirname, 'data');
+const USERS_FILE = path.join(DATA_DIR, 'users.json');
+const NOTIFICATIONS_FILE = path.join(DATA_DIR, 'notifications.json');
+const COUNTER_FILE = path.join(DATA_DIR, 'counters.json');
+
+// Ensure data directory exists
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+// Load data from JSON files
+function loadData() {
+  try {
+    // Load users
+    if (fs.existsSync(USERS_FILE)) {
+      users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+    } else {
+      users = [];
+    }
+    
+    // Load notifications
+    if (fs.existsSync(NOTIFICATIONS_FILE)) {
+      notifications = JSON.parse(fs.readFileSync(NOTIFICATIONS_FILE, 'utf8'));
+    } else {
+      notifications = [];
+    }
+    
+    // Load counters
+    if (fs.existsSync(COUNTER_FILE)) {
+      const counters = JSON.parse(fs.readFileSync(COUNTER_FILE, 'utf8'));
+      notificationId = counters.notificationId || 1;
+    } else {
+      notificationId = 1;
+    }
+    
+    console.log(`Loaded ${users.length} users and ${notifications.length} notifications`);
+  } catch (error) {
+    console.error('Error loading data:', error);
+    users = [];
+    notifications = [];
+    notificationId = 1;
+  }
+}
+
+// Save data to JSON files
+function saveUsers() {
+  try {
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+  } catch (error) {
+    console.error('Error saving users:', error);
+  }
+}
+
+function saveNotifications() {
+  try {
+    fs.writeFileSync(NOTIFICATIONS_FILE, JSON.stringify(notifications, null, 2));
+    fs.writeFileSync(COUNTER_FILE, JSON.stringify({ notificationId }, null, 2));
+  } catch (error) {
+    console.error('Error saving notifications:', error);
+  }
+}
+
+// Load existing data on startup
+loadData();
+
+// In-memory storage (now backed by JSON files)
+let users = users || [];
+let notifications = notifications || [];
+let notificationId = notificationId || 1;
 
 // File upload setup
 const upload = multer({
@@ -26,7 +92,23 @@ const upload = multer({
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Custom middleware for serving files with proper headers
+app.use('/uploads', (req, res, next) => {
+  const filePath = path.join(__dirname, 'uploads', req.path);
+  const ext = path.extname(req.path).toLowerCase();
+  
+  // Set appropriate Content-Type headers
+  if (ext === '.pdf') {
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'inline'); // Open in browser instead of download
+  } else if (ext === '.html' || ext === '.htm') {
+    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Content-Disposition', 'inline');
+  }
+  
+  // Serve the file
+  express.static(path.join(__dirname, 'uploads'))(req, res, next);
+});
 
 // JWT middleware
 function authenticateToken(req, res, next) {
@@ -53,6 +135,7 @@ app.post('/api/admin/register', async (req, res) => {
   if (users.find(u => u.username === username)) return res.status(400).json({ error: 'User already exists' });
   const hash = await bcrypt.hash(password, 10);
   users.push({ id: users.length + 1, username, password: hash, role: 'admin' });
+  saveUsers(); // Save to JSON file
   res.json({ success: true, message: 'Admin registered' });
 });
 
@@ -74,6 +157,7 @@ app.post('/api/admin/create-subadmin', authenticateToken, requireAdmin, async (r
   if (users.find(u => u.username === username)) return res.status(400).json({ error: 'User already exists' });
   const hash = await bcrypt.hash(password, 10);
   users.push({ id: users.length + 1, username, password: hash, role: 'subadmin' });
+  saveUsers(); // Save to JSON file
   res.json({ success: true, message: 'Sub-admin created' });
 });
 
@@ -83,6 +167,7 @@ app.delete('/api/admin/delete-subadmin/:username', authenticateToken, requireAdm
   const idx = users.findIndex(u => u.username === username && u.role === 'subadmin');
   if (idx === -1) return res.status(404).json({ error: 'Sub-admin not found' });
   users.splice(idx, 1);
+  saveUsers(); // Save to JSON file
   res.json({ success: true, message: 'Sub-admin deleted' });
 });
 
@@ -100,6 +185,7 @@ app.post('/api/admin/change-password', authenticateToken, async (req, res) => {
   const valid = await bcrypt.compare(oldPassword, user.password);
   if (!valid) return res.status(400).json({ error: 'Old password incorrect' });
   user.password = await bcrypt.hash(newPassword, 10);
+  saveUsers(); // Save to JSON file
   res.json({ success: true, message: 'Password changed' });
 });
 
@@ -128,6 +214,7 @@ app.post('/api/notifications', authenticateToken, upload.single('file'), (req, r
     createdAt: new Date()
   };
   notifications.unshift(notification);
+  saveNotifications(); // Save to JSON file
   res.json({ success: true, data: notification });
 });
 
@@ -147,6 +234,7 @@ app.delete('/api/notifications/:id', authenticateToken, (req, res) => {
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
   }
   notifications.splice(idx, 1);
+  saveNotifications(); // Save to JSON file
   res.json({ success: true, message: 'Notification deleted' });
 });
 

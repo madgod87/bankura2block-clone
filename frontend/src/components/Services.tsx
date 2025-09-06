@@ -1,14 +1,26 @@
 import React from 'react';
 
+interface Service {
+  id: number;
+  title: string;
+  description: string;
+  icon: string;
+  color: string;
+  features: string[];
+  externalLink?: string;
+  internalLink?: string;
+}
+
 const Services: React.FC = () => {
-  const services = [
+  const services: Service[] = [
     {
       id: 1,
       title: 'Notifications',
       description: 'Latest updates and important notices from the office',
-      icon: '�',
+      icon: '📢',
       color: 'from-primary-500 to-primary-600',
       features: ['Stay informed with the latest notifications.'],
+      internalLink: '/notifications',
     },
     {
       id: 2,
@@ -103,6 +115,13 @@ const Services: React.FC = () => {
                       className={`w-full block text-center bg-gradient-to-r ${service.color} text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1`}
                     >
                       Go to Service
+                    </a>
+                  ) : service.internalLink ? (
+                    <a
+                      href={service.internalLink}
+                      className={`w-full block text-center bg-gradient-to-r ${service.color} text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1`}
+                    >
+                      View {service.title}
                     </a>
                   ) : (
                     <button className={`w-full bg-gradient-to-r ${service.color} text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1`}>

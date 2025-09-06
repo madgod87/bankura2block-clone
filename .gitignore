@@ -4,6 +4,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Include data files but exclude uploaded files
+!/backend/data/
+/backend/uploads/*
+!/backend/uploads/.gitkeep
+
 # Production builds
 /frontend/build/
 /backend/dist/

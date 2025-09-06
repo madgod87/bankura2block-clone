@@ -1,6 +1,6 @@
-# Bankura2Block Website Clone
+# Krishnagar-I Development Block Website
 
-A full-stack React application cloning the Bankura2Block website with responsive design and colorful UI.
+A full-stack React application for the Krishnagar-I Development Block government website with responsive design and colorful UI.
 
 ## Project Structure
 

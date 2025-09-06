@@ -54,6 +54,18 @@ const Header: React.FC = () => {
                 {item.name}
               </a>
             ))}
+            
+            {/* Notification Box */}
+            <a
+              href="/notifications"
+              className="relative bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2 shadow-lg"
+            >
+              <span className="text-lg">📢</span>
+              <span className="font-medium">Notifications</span>
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                •
+              </span>
+            </a>
           </nav>
 
           {/* Mobile menu button */}
@@ -101,6 +113,16 @@ const Header: React.FC = () => {
                   {item.name}
                 </a>
               ))}
+              
+              {/* Mobile Notification Link */}
+              <a
+                href="/notifications"
+                className="bg-accent-500 hover:bg-accent-600 text-white px-3 py-2 rounded-md transition-colors duration-200 flex items-center space-x-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <span>📢</span>
+                <span className="font-medium">Notifications</span>
+              </a>
             </div>
           </nav>
         )}
