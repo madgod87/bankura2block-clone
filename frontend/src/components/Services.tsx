@@ -4,51 +4,45 @@ const Services: React.FC = () => {
   const services = [
     {
       id: 1,
-      title: 'Certificate Services',
-      description: 'Income, Caste, Residence certificates and more',
-      icon: '📄',
+      title: 'Notifications',
+      description: 'Latest updates and important notices from the office',
+      icon: '�',
       color: 'from-primary-500 to-primary-600',
-      features: ['Income Certificate', 'Caste Certificate', 'Residence Certificate', 'Birth Certificate'],
+      features: ['Stay informed with the latest notifications.'],
     },
     {
       id: 2,
-      title: 'Land Records',
-      description: 'Land ownership, mutation, and record services',
-      icon: '🏞️',
+      title: 'Office Staff Details',
+      description: 'View details of office staff members',
+      icon: '👨‍💼',
       color: 'from-accent-500 to-accent-600',
-      features: ['Land Mutation', 'Property Records', 'Survey Records', 'Revenue Records'],
+      features: ['Know your office staff and their roles.'],
     },
     {
       id: 3,
-      title: 'Social Schemes',
-      description: 'Government welfare schemes and benefits',
-      icon: '🤝',
+      title: 'Panchayat Member Details',
+      description: 'Information about Panchayat members',
+      icon: '👥',
       color: 'from-secondary-500 to-secondary-600',
-      features: ['MGNREGA', 'Pension Schemes', 'Housing Schemes', 'Education Support'],
+      features: ['Find details of Panchayat members.'],
     },
     {
       id: 4,
-      title: 'Agriculture Support',
-      description: 'Farmer assistance and agricultural services',
-      icon: '🌾',
+      title: 'Lakshmir Bhander Status Check',
+      description: 'Check your Lakshmir Bhander application status',
+      icon: '💰',
       color: 'from-green-500 to-green-600',
-      features: ['Crop Insurance', 'Subsidies', 'Soil Testing', 'Agricultural Loans'],
+      features: ['Track your Lakshmir Bhander application.'],
+      externalLink: 'https://socialsecurity.wb.gov.in/track-applicant',
     },
     {
       id: 5,
-      title: 'Healthcare Services',
-      description: 'Public health programs and medical support',
-      icon: '🏥',
-      color: 'from-red-500 to-red-600',
-      features: ['Health Cards', 'Vaccination', 'Mother-Child Care', 'Medical Assistance'],
-    },
-    {
-      id: 6,
-      title: 'Digital Services',
-      description: 'Online applications and digital governance',
-      icon: '💻',
+      title: 'Jay-Bangla Pension Status Check',
+      description: 'Check your Jay-Bangla Pension application status',
+      icon: '🏦',
       color: 'from-purple-500 to-purple-600',
-      features: ['Online Applications', 'Digital Payments', 'E-Services', 'Status Tracking'],
+      features: ['Track your Jay-Bangla Pension application.'],
+      externalLink: 'https://jaibangla.wb.gov.in/track-applicant-public',
     },
   ];
 
@@ -61,7 +55,7 @@ const Services: React.FC = () => {
             Our Services
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            We provide comprehensive government services to citizens of Bankura II Block.
+            We provide comprehensive government services to citizens of Krishnagar-I Development Block, Nadia District.
             Access various schemes, certificates, and support services through our office.
           </p>
           <div className="mt-8 w-24 h-1 bg-gradient-to-r from-primary-500 to-accent-500 mx-auto rounded-full"></div>
@@ -101,9 +95,20 @@ const Services: React.FC = () => {
                 </div>
 
                 <div className="pt-4 border-t border-gray-100">
-                  <button className={`w-full bg-gradient-to-r ${service.color} text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1`}>
-                    Learn More
-                  </button>
+                  {service.externalLink ? (
+                    <a
+                      href={service.externalLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`w-full block text-center bg-gradient-to-r ${service.color} text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1`}
+                    >
+                      Go to Service
+                    </a>
+                  ) : (
+                    <button className={`w-full bg-gradient-to-r ${service.color} text-white font-semibold py-3 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1`}>
+                      Learn More
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -119,7 +124,7 @@ const Services: React.FC = () => {
               </h3>
               <p className="text-xl mb-8 text-white/90">
                 Our team is here to help you with all government services and procedures.
-                Visit our office or contact us for personalized support.
+                Visit our office or contact us for personalized support at bdo.krishnagar1@gmail.com or 9733374108.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button className="bg-white text-primary-600 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors transform hover:scale-105">

@@ -1,4 +1,5 @@
 import React from 'react';
+import { XIcon } from './XIcon';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -18,12 +19,12 @@ const Footer: React.FC = () => {
                 </div>
               </div>
               <div>
-                <h3 className="text-2xl font-bold font-display">Bankura II Block</h3>
-                <p className="text-primary-200">District Administration Office</p>
+                <h3 className="text-2xl font-bold font-display">Krishnagar-I Development Block</h3>
+                <p className="text-primary-200">Nadia District Administration Office</p>
               </div>
             </div>
             <p className="text-primary-100 mb-6 leading-relaxed">
-              Serving the community of Bankura II Block with transparency, efficiency, and dedication. 
+              Serving the community of Krishnagar-I Block, Nadia District, with transparency, efficiency, and dedication. 
               We are committed to providing quality government services to all citizens.
             </p>
             
@@ -34,20 +35,20 @@ const Footer: React.FC = () => {
                   📍
                 </div>
                 <span className="text-primary-100">
-                  Block Administrative Building, Bankura II, West Bengal - 722122
+                  Krishnagar-I Development Block Office, Nadia, West Bengal - 741101
                 </span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-primary-700 rounded-lg flex items-center justify-center">
                   📞
                 </div>
-                <span className="text-primary-100">+91-123-456-7890</span>
+                <span className="text-primary-100">9733374108</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-primary-700 rounded-lg flex items-center justify-center">
                   📧
                 </div>
-                <span className="text-primary-100">info@bankura2block.com</span>
+                <span className="text-primary-100">bdo.krishnagar1@gmail.com</span>
               </div>
             </div>
           </div>
@@ -116,18 +117,18 @@ const Footer: React.FC = () => {
               <h4 className="text-xl font-bold mb-4 font-display">Office Hours</h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="card bg-primary-700/50">
-                  <h5 className="font-semibold text-primary-100 mb-2">Weekdays</h5>
-                  <p className="text-white">10:00 AM - 5:00 PM</p>
-                  <p className="text-primary-200 text-xs mt-1">Monday to Friday</p>
+                  <h5 className="font-semibold text-primary-100 mb-2">Monday to Friday</h5>
+                  <p className="text-white">10:30 AM - 5:30 PM IST</p>
+                  <p className="text-primary-200 text-xs mt-1">Except Government Holidays</p>
                 </div>
                 <div className="card bg-primary-700/50">
-                  <h5 className="font-semibold text-primary-100 mb-2">Saturday</h5>
-                  <p className="text-white">10:00 AM - 2:00 PM</p>
-                  <p className="text-primary-200 text-xs mt-1">Half Day</p>
+                  <h5 className="font-semibold text-primary-100 mb-2">Saturday & Sunday</h5>
+                  <p className="text-white">Closed</p>
+                  <p className="text-primary-200 text-xs mt-1">Weekend Holiday</p>
                 </div>
               </div>
               <p className="text-primary-200 text-xs mt-3">
-                * Closed on Sundays and Government Holidays
+                * Closed on weekends and Government Holidays
               </p>
             </div>
 
@@ -137,15 +138,19 @@ const Footer: React.FC = () => {
               
               {/* Social Media Icons */}
               <div className="flex justify-center lg:justify-end space-x-4 mb-6">
-                {['📘', '🐦', '📷', '💼'].map((icon, index) => (
-                  <a
-                    key={index}
-                    href="#"
-                    className="w-12 h-12 bg-primary-700 hover:bg-primary-600 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
-                  >
-                    <span className="text-xl">{icon}</span>
-                  </a>
-                ))}
+                <a
+                  href="https://x.com/Krishnagarbdo1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-12 h-12 bg-primary-700 hover:bg-primary-600 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
+                  title="X (Twitter)"
+                >
+                  <span className="text-xl text-white"><XIcon /></span>
+                </a>
+                {/* Add more social icons as needed */}
+              </div>
+              <div className="text-primary-200 text-sm mt-2">
+                X handle: <a href="https://x.com/Krishnagarbdo1" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">@Krishnagarbdo1</a>
               </div>
 
               {/* Newsletter Signup */}
@@ -175,7 +180,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center text-sm">
             <div className="text-primary-200 mb-4 md:mb-0">
               <p>
-                © {currentYear} Bankura II Block Administration. All rights reserved.
+                © {currentYear} Krishnagar-I Development Block, Nadia. All rights reserved.
               </p>
               <p className="text-xs mt-1">
                 Developed as part of Digital India Initiative

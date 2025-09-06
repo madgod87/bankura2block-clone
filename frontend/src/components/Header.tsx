@@ -9,6 +9,7 @@ const Header: React.FC = () => {
     { name: 'Image Gallery', href: '/gallery' },
     { name: 'Services', href: '/services' },
     { name: 'Contact', href: '/contact' },
+    { name: 'Admin', href: '/admin-register' },
   ];
 
   return (
@@ -17,8 +18,8 @@ const Header: React.FC = () => {
       <div className="bg-primary-800 text-white py-2">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">
           <div className="flex items-center space-x-4">
-            <span>📧 info@bankura2block.com</span>
-            <span>📞 +91-123-456-7890</span>
+            <span>📧 bdo.krishnagar1@gmail.com</span>
+            <span>📞 9733374108</span>
           </div>
           <div className="flex items-center space-x-2">
             <span>🌐 Government of West Bengal</span>
@@ -31,17 +32,13 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Logo section */}
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">B2</span>
-              </div>
-            </div>
+            <img src="/logo/logo.png" alt="Office Logo" className="w-16 h-16 rounded-full bg-white shadow-md object-contain" />
             <div className="text-white">
               <h1 className="text-2xl md:text-3xl font-bold font-display">
-                Bankura II Block
+                Krishnagar-I Development Block
               </h1>
               <p className="text-primary-100 text-sm md:text-base">
-                District Administration Office
+                Nadia District Administration Office
               </p>
             </div>
           </div>

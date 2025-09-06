@@ -72,8 +72,8 @@ const ContactForm: React.FC = () => {
                     <div>
                       <h4 className="font-semibold text-gray-800 mb-1">Office Address</h4>
                       <p className="text-gray-600">
-                        Block Administrative Building<br />
-                        Bankura II, West Bengal - 722122
+                        Krishnagar-I Development Block Office<br />
+                        Nadia, West Bengal - 741101
                       </p>
                     </div>
                   </div>
@@ -84,8 +84,8 @@ const ContactForm: React.FC = () => {
                       <span className="text-2xl">📞</span>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-1">Phone</h4>
-                      <p className="text-gray-600">+91-123-456-7890</p>
+                      <h4 className="font-semibold text-gray-800 mb-1">Mobile</h4>
+                      <p className="text-gray-600">9733374108</p>
                     </div>
                   </div>
 
@@ -96,7 +96,7 @@ const ContactForm: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-800 mb-1">Email</h4>
-                      <p className="text-gray-600">info@bankura2block.com</p>
+                      <p className="text-gray-600">bdo.krishnagar1@gmail.com</p>
                     </div>
                   </div>
 
@@ -108,8 +108,9 @@ const ContactForm: React.FC = () => {
                     <div>
                       <h4 className="font-semibold text-gray-800 mb-1">Office Hours</h4>
                       <p className="text-gray-600">
-                        Monday - Friday: 10:00 AM - 5:00 PM<br />
-                        Saturday: 10:00 AM - 2:00 PM
+                        Monday - Friday: 10:30 AM - 5:30 PM IST<br />
+                        Saturday & Sunday: Closed (Weekend Holiday)<br />
+                        Except Government Holidays
                       </p>
                     </div>
                   </div>

@@ -3,25 +3,79 @@ import React, { useState, useEffect } from 'react';
 const Hero: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Sample images for slideshow
+  // Uploaded images for slideshow
   const slides = [
     {
       id: 1,
-      image: 'https://via.placeholder.com/1200x600/3B82F6/FFFFFF?text=Welcome+to+Bankura+II+Block',
-      title: 'Welcome to Bankura II Block',
-      description: 'Serving the community with dedication and transparency',
+      image: '/slideshow/slide1.jpg',
+      title: 'Welcome to Krishnagar-I Development Block',
+      description: 'Serving the community of Nadia District with dedication and transparency',
     },
     {
       id: 2,
-      image: 'https://via.placeholder.com/1200x600/10B981/FFFFFF?text=Government+Services',
+      image: '/slideshow/slide2.jpg',
       title: 'Government Services',
       description: 'Access various government schemes and services online',
     },
     {
       id: 3,
-      image: 'https://via.placeholder.com/1200x600/D97706/FFFFFF?text=Digital+India',
+      image: '/slideshow/slide3.jpg',
       title: 'Digital India Initiative',
       description: 'Empowering citizens through digital transformation',
+    },
+    {
+      id: 4,
+      image: '/slideshow/slide4.jpg',
+      title: 'Community Support',
+      description: 'We are here to help you with all government services and procedures',
+    },
+    {
+      id: 5,
+      image: '/slideshow/slide5.jpg',
+      title: 'Transparency & Efficiency',
+      description: 'Committed to providing quality government services to all citizens',
+    },
+    {
+      id: 6,
+      image: '/slideshow/slide6.jpg',
+      title: 'Development Initiatives',
+      description: 'Driving progress and development in Nadia District',
+    },
+    {
+      id: 7,
+      image: '/slideshow/slide7.jpg',
+      title: 'Public Participation',
+      description: 'Your voice matters in local governance',
+    },
+    {
+      id: 8,
+      image: '/slideshow/slide8.jpg',
+      title: 'Inclusive Growth',
+      description: 'Ensuring benefits reach every citizen',
+    },
+    {
+      id: 9,
+      image: '/slideshow/slide9.jpg',
+      title: 'Modern Facilities',
+      description: 'Upgrading infrastructure for a better tomorrow',
+    },
+    {
+      id: 10,
+      image: '/slideshow/slide10.jpg',
+      title: 'Social Welfare',
+      description: 'Supporting the vulnerable and underprivileged',
+    },
+    {
+      id: 11,
+      image: '/slideshow/slide11.jpg',
+      title: 'Education for All',
+      description: 'Promoting education and skill development',
+    },
+    {
+      id: 12,
+      image: '/slideshow/slide12.jpg',
+      title: 'Clean & Green',
+      description: 'Working towards a sustainable environment',
     },
   ];
 
