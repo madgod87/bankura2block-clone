@@ -9,6 +9,7 @@ import AdminRegister from './components/AdminRegister';
 import NotificationsPage from './components/NotificationsPage';
 import AdminDashboard from './components/AdminDashboard';
 import ImageGallery from './components/ImageGallery';
+import BlockProfile from './components/BlockProfile';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
@@ -30,6 +31,7 @@ function App() {
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/gallery" element={<ImageGallery />} />
+            <Route path="/block-profile" element={<BlockProfile />} />
           </Routes>
         </main>
         <Footer />

@@ -1,8 +1,7 @@
 // SVG for X (Twitter) logo
-// Source: https://simpleicons.org/icons/x.svg
+// Simplified X icon that works well at small sizes
 export const XIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 1200 1227" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="1200" height="1227" rx="240" fill="currentColor"/>
-    <path d="M908.6 320H741.7L600 507.2 458.3 320H291.4l217.2 302.2L291.4 907h166.9l141.7-187.2L741.7 907h166.9L691.4 622.2 908.6 320zM600 682.2L507.2 800H692.8L600 682.2z" fill="#fff"/>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
   </svg>
 );
